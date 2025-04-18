@@ -1,12 +1,12 @@
-import pickle
+import dill as pickle
 import os
 import gdown
 import torch
+from utils.vocab import Vocabulary
 
 def load_vocab(vocab_path):
-    with open(vocab_path, 'rb') as f:
-        vocab_ = pickle.load(f)
-    return vocab_
+    vocab = torch.load(vocab_path, weights_only=False)
+    return vocab
 
 def load_model():
     if not os.path.exists("saved_model.pth"):

@@ -10,7 +10,7 @@ from utils.vocab import Vocabulary
 from utils.image_utils import image_transforms
 
 app = Flask(__name__)
-vocab = load_vocab("checkpoints/vocab.pkl")
+vocab = load_vocab("checkpoints/vocab.pth")
 encoder = VGG16Encoder()
 decoder = Decoder(embed_dim=300, hidden_size=512, vocab=vocab)
 model = ImageCaptioningModel(encoder, decoder)
