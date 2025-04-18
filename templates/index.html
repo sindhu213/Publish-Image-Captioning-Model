@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Caption Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        form { margin-bottom: 20px; }
+        img { max-width: 300px; display: block; margin-top: 10px; }
+        #caption { margin-top: 20px; font-weight: bold; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <h1>Upload an Image to Generate Caption</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required>
+        <button type="submit">Generate Caption</button>
+    </form>
+    <img id="preview" src="#" alt="Image preview" style="display:none;">
+    <div id="caption"></div>
+
+    <script>
+        const form = document.getElementById('upload-form');
+        const preview = document.getElementById('preview');
+        const captionBox = document.getElementById('caption');
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const fileInput = form.querySelector('input[type="file"]');
+
+            // Preview image
+            const file = fileInput.files[0];
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = 'block';
+            }
+
+            const response = await fetch('/caption', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            captionBox.innerText = data.caption ? `Caption: ${data.caption}` : `Error: ${data.error}`;
+        };
+    </script>
+</body>
+</html>
