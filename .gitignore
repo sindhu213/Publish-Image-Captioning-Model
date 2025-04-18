@@ -2,3 +2,4 @@ myenv
 __pycache__/
 .DS_Store
 checkpoints/saved_model.pth
+checkpoints/vocab.pth

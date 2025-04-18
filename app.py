@@ -3,14 +3,13 @@ from model.Encoder import VGG16Encoder
 from model.Decoder import Decoder
 from model.CombinedModel import ImageCaptioningModel
 from PIL import Image, UnidentifiedImageError
-import torch
 from utils.utils import load_vocab, load_model
 from inference.caption_generator import generate_caption
 from utils.vocab import Vocabulary
 from utils.image_utils import image_transforms
 
 app = Flask(__name__)
-vocab = load_vocab("checkpoints/vocab.pth")
+vocab = load_vocab()
 encoder = VGG16Encoder()
 decoder = Decoder(embed_dim=300, hidden_size=512, vocab=vocab)
 model = ImageCaptioningModel(encoder, decoder)
@@ -45,4 +44,5 @@ def caption():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
+    _ = Vocabulary()
     app.run(host='0.0.0.0', port=8000)

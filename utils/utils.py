@@ -1,11 +1,16 @@
-import dill as pickle
 import os
 import gdown
 import torch
 from utils.vocab import Vocabulary
 
-def load_vocab(vocab_path):
-    vocab = torch.load(vocab_path, weights_only=False)
+def load_vocab():
+    if not os.path.exists("vocab.pth"):
+        print("Downloading vocab...")
+        file_id = "1iedHly1ZGTAK1JnW-vH0NQXUug6TKF2A"
+        url = f"https://drive.google.com/uc?id={file_id}"
+        gdown.download(url, "vocab.pth",quiet=False)
+    
+    vocab = torch.load("vocab.pth", weights_only=False)
     return vocab
 
 def load_model():
