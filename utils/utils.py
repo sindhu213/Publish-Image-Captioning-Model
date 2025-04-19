@@ -1,7 +1,9 @@
 import os
 import gdown
 import torch
-from utils.vocab import Vocabulary
+import torch
+
+torch.backends.quantized.engine = 'qnnpack' 
 
 def load_vocab():
     if not os.path.exists("vocab.pth"):
@@ -14,11 +16,11 @@ def load_vocab():
     return vocab
 
 def load_model():
-    if not os.path.exists("saved_model.pth"):
+    if not os.path.exists("quantized_model_full.pth"):
         print("Downloading model...")
-        file_id = "1BYpkwtPNnLGClJnkQ0nzguz3FIaIeVU2"
+        file_id = "135yD-wPaoW1R_pPX-4egrA__dzNRRg6P"
         url = f"https://drive.google.com/uc?id={file_id}"
-        gdown.download(url, "saved_model.pth", quiet=False)
+        gdown.download(url, "quantized_model_full.pth", quiet=False)
 
-    model = torch.load("saved_model.pth", map_location=torch.device("cpu"))
+    model = torch.load('quantized_model_full.pth', weights_only=False)
     return model

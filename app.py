@@ -16,10 +16,8 @@ encoder = VGG16Encoder()
 decoder = Decoder(embed_dim=300, hidden_size=512, vocab=vocab)
 model = ImageCaptioningModel(encoder, decoder)
 
-checkpoint = load_model()
-model.load_state_dict(checkpoint['model_state_dict'])
+model = load_model()
 model.eval()
-
 
 # Routes
 @app.route('/')
