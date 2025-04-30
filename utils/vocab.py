@@ -3,7 +3,7 @@ import torch
 import numpy as np
 
 class Vocabulary:
-  def __init__(self,freq_threshold=5):
+  def __init__(self,freq_threshold=3):
     self.freq_threshold = freq_threshold
     self.idx2word = {0: '<pad>', 1: '<sos>', 2: '<eos>', 3: '<unk>'}
     self.word2idx = {v:k for k, v in self.idx2word.items()}

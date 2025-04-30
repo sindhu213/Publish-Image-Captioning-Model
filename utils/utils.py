@@ -16,11 +16,12 @@ def load_vocab():
     return vocab
 
 def load_model():
-    if not os.path.exists("quantized_model_full.pth"):
+    if not os.path.exists("best_model.pth"):
         print("Downloading model...")
-        file_id = "135yD-wPaoW1R_pPX-4egrA__dzNRRg6P"
+        file_id = "1eMi7N8ArhNm3_4CoKigYBpdrkuJtNM4I"
         url = f"https://drive.google.com/uc?id={file_id}"
-        gdown.download(url, "quantized_model_full.pth", quiet=False)
-
-    model = torch.load('quantized_model_full.pth', weights_only=False)
-    return model
+        gdown.download(url, "best_model.pth", quiet=False)
+        
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model_state_dict = torch.load('best_model.pth', weights_only=False,  map_location=device)
+    return model_state_dict, device
