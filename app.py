@@ -8,8 +8,18 @@ from utils.utils import load_model
 from inference.caption_generator import generate_caption
 from utils.vocab import Vocabulary
 from utils.image_utils import image_transforms
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+CORS(app, resources={
+    r"/caption": {
+        "origins": ["http://localhost:5173", "http://192.168.29.178:5173"],
+        "methods": ["POST", "OPTIONS"],
+        "allow_headers": ["Content-Type"],
+        "supports_credentials": True
+    }
+})
+
 vocab = Vocabulary()
 vocab.__dict__.update(torch.load("checkpoints/vocab_dict.pth"))
 encoder = Resnet101()
@@ -21,12 +31,25 @@ model.load_state_dict(model_state_dict)
 model = model.to(device)
 model.eval()
 
-# Routes
-@app.route('/')
-def home():
-    return render_template('index.html')
+@app.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:5173'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    return response
+
+
+@app.route('/caption', methods=['OPTIONS'])
+def handle_options():
+    response = jsonify({'message': 'Preflight Accepted'})
+    response.headers.add("Access-Control-Allow-Origin", "http://localhost:5173")
+    response.headers.add("Access-Control-Allow-Headers", "Content-Type")
+    response.headers.add("Access-Control-Allow-Methods", "POST")
+    return response
 
 @app.route('/caption', methods=['POST'])
+@cross_origin() 
 def caption():
     if 'image' not in request.files:
         return jsonify({'error': 'No image uploaded'}), 400
